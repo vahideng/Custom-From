@@ -1,0 +1,19 @@
+.Input {
+    position: relative;
+
+}
+.InputItems{
+   width: 100%;
+    margin:  auto;
+    vertical-align: center;
+    background-color: blanchedalmond;
+    padding: 10px;
+    box-sizing: border-box;
+
+}
+
+.Inputelement {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}

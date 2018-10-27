@@ -14,7 +14,8 @@ export default class Form extends Component {
           required: true
         },
         valid: false,
-        value: ''
+        value: '',
+        touched: false
       },
 
       address: {
@@ -27,7 +28,8 @@ export default class Form extends Component {
           required: true
         },
         valid: false,
-        value: ''
+        value: '',
+        touched: false
       },
       email: {
         elementType: 'input',
@@ -40,7 +42,8 @@ export default class Form extends Component {
           minLength: 6
         },
         valid: false,
-        value: ''
+        value: '',
+        touched: false
       },
       delivery: {
         elementType: 'select',
@@ -51,33 +54,45 @@ export default class Form extends Component {
           ],
           type: 'text'
         },
-        value: ''
+        validation: {},
+        value: 'cheapest',
+        valid: true
       }
-    }
+    },
+    formIsValid: false
   };
 
-  checkValidity(value, rules) {
+  checkValidity = (value, rules) => {
     let isvalid = true;
     if (rules.required) {
       isvalid = value.trim() !== '' && isvalid;
     }
-    if (rules.minLength) {
+    if (rules.required && rules.minLength) {
       isvalid = value.length >= rules.minLength && isvalid;
     }
     return isvalid;
-  }
+  };
   changeHandler = (event, itemId) => {
-    const orderForm = { ...this.state.orderForm };
+    const orderForm = {
+      ...this.state.orderForm
+    };
     const updatedFormElements = { ...orderForm[itemId] };
+
     updatedFormElements.value = event.target.value;
+
     updatedFormElements.valid = this.checkValidity(
       updatedFormElements.value,
       updatedFormElements.validation
     );
-    console.log(updatedFormElements);
-    
+    updatedFormElements.touched = true;
     orderForm[itemId] = updatedFormElements;
-    this.setState({ orderForm });
+
+    let formIsValid = true;
+    for (let inputIdentifier in orderForm) {
+      formIsValid = orderForm[inputIdentifier].valid && formIsValid;
+    }
+
+    this.setState({ orderForm, formIsValid });
   };
 
   submitHandler = event => {
@@ -90,8 +105,6 @@ export default class Form extends Component {
     let orderForm = {}; //storong data into new object ES6 jss
     Object.keys(this.state.orderForm).map(item => {
       orderForm[item] = this.state.orderForm[item].value;
-
-      console.log(orderForm);
     });
   };
 
@@ -103,6 +116,7 @@ export default class Form extends Component {
         config: this.state.orderForm[key]
       });
     }
+
     return (
       <form onSubmit={this.submitHandler} className={classes.Form}>
         {form.map(item => {
@@ -114,11 +128,17 @@ export default class Form extends Component {
                 lable={item.id}
                 config={item.config.config}
                 changed={event => this.changeHandler(event, item.id)}
+                invalid={!item.config.valid}
+                touched={item.config.touched}
               />
             </div>
           );
         })}
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          disabled={!this.state.formIsValid}
+          className={`btn btn-primary ${classes.Button}`}
+        >
           Submit
         </button>
       </form>

@@ -1,4 +1,10 @@
-.Input {
+.Invalid {
+    border: 1px solid red;
+    background-color: salmon;
+}
+
+
+/* .Input {
     position: relative;
 
 }
@@ -16,4 +22,4 @@
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-}
+} */

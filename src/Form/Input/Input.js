@@ -1,9 +1,15 @@
 import React from 'react';
+import classes from './Input.module.css';
 
 
 const input = props => {
   let input = '';
+  let inputClassName= ["form-control"];
+  if (props.invalid && props.touched){
+    inputClassName.push(classes.Invalid)
+  }
   switch (props.elementtype) {
+
     case 'input':
       input = (
         <div>
@@ -11,7 +17,7 @@ const input = props => {
           <input
             value={props.value}
             onChange={props.changed}
-            className="form-control"
+            className={inputClassName.join(' ')}
             {...props.config}
           />
         </div>
@@ -25,7 +31,7 @@ const input = props => {
           <textarea
             value={props.value}
             onChange={props.changed}
-            className="form-control"
+            className={inputClassName.join(' ')}
             {...props.config}
           />
         </div>

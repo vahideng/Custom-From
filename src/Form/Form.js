@@ -55,38 +55,45 @@ export default class Form extends Component {
       }
     }
   };
-  changeHandler = (event, itemId) => {
-    const orderForm = { ...this.state.orderForm };
-    const updatedFormElements = { ...orderForm[itemId] };
-    updatedFormElements.value = event.target.value;
-    orderForm[itemId] = updatedFormElements;
-    this.setState({ orderForm });
-  };
 
   checkValidity(value, rules) {
     let isvalid = true;
     if (rules.required) {
       isvalid = value.trim() !== '' && isvalid;
     }
-    if (rules.required) {
+    if (rules.minLength) {
       isvalid = value.length >= rules.minLength && isvalid;
     }
     return isvalid;
   }
+  changeHandler = (event, itemId) => {
+    const orderForm = { ...this.state.orderForm };
+    const updatedFormElements = { ...orderForm[itemId] };
+    updatedFormElements.value = event.target.value;
+    updatedFormElements.valid = this.checkValidity(
+      updatedFormElements.value,
+      updatedFormElements.validation
+    );
+    console.log(updatedFormElements);
+    
+    orderForm[itemId] = updatedFormElements;
+    this.setState({ orderForm });
+  };
 
-  submitHandler =(event)=> {
+  submitHandler = event => {
     event.preventDefault();
-    let orderForm = {};
-    
-      for (let key in this.state.orderForm) {
-      orderForm[key]= this.state.orderForm[key].value;
-      console.log(orderForm);
-      
-    }
-    
+    // let orderForm = {};
+    // for (let key in this.state.orderForm) {
+    //   orderForm[key] = this.state.orderForm[key].value; //storong data into new object jss old
+    //   console.log(orderForm);
+    // }
+    let orderForm = {}; //storong data into new object ES6 jss
+    Object.keys(this.state.orderForm).map(item => {
+      orderForm[item] = this.state.orderForm[item].value;
 
-    
-  }
+      console.log(orderForm);
+    });
+  };
 
   render() {
     let form = [];
